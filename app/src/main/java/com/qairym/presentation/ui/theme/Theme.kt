@@ -1,4 +1,4 @@
-package com.qairym.presentation.theme
+package com.qairym.presentation.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
