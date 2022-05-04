@@ -12,27 +12,37 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.qairym.R
+import com.qairym.presentation.Screen
 import com.qairym.presentation.ui.theme.ButtonBackground
 import com.qairym.presentation.ui.theme.GrayBackground
 import com.qairym.presentation.ui.theme.Shapes
 import com.qairym.presentation.ui.theme.TextColor
+import com.qairym.presentation.utils.AuthUiEvent
 
-@Preview
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun RegistrationScreen() {
+fun RegistrationScreen(
+    navController: NavController,
+    viewModel: AuthViewModel = hiltViewModel(),
+) {
+    val state = viewModel.state
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .wrapContentSize(Alignment.Center),
         color = MaterialTheme.colors.background
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(32.dp),
-            verticalArrangement = Arrangement.Center
+                .wrapContentSize(Alignment.Center)
+                .padding(32.dp, 32.dp, 32.dp, 32.dp),
+            verticalArrangement = Arrangement.Center,
         ) {
             Image(
                 painterResource(
@@ -42,7 +52,7 @@ fun RegistrationScreen() {
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             Text(
                 text = "Регистрация",
@@ -55,7 +65,7 @@ fun RegistrationScreen() {
                     .fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             Button(
                 onClick = { /*TODO*/ },
@@ -82,7 +92,7 @@ fun RegistrationScreen() {
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -112,63 +122,79 @@ fun RegistrationScreen() {
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             OutlinedTextField(
-                value = "",
-                onValueChange = { /*TODO*/ },
+                value = state.signUpEmail,
+                onValueChange = {
+                    viewModel.onEvent(AuthUiEvent.SignUpEmailChanged(it))
+                },
+                singleLine = true,
                 label = { Text("Электронная почта") },
                 shape = RoundedCornerShape(15.dp),
                 modifier = Modifier.fillMaxWidth(),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = TextColor,
-                    focusedLabelColor = TextColor
+                    focusedLabelColor = TextColor,
+                    cursorColor = TextColor
                 )
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             OutlinedTextField(
-                value = "",
-                onValueChange = { /*TODO*/ },
+                value = state.signUpUsername,
+                onValueChange = {
+                    viewModel.onEvent(AuthUiEvent.SignUpUsernameChanged(it))
+                },
+                singleLine = true,
                 label = { Text("Имя пользователя") },
                 shape = RoundedCornerShape(15.dp),
                 modifier = Modifier.fillMaxWidth(),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = TextColor,
-                    focusedLabelColor = TextColor
-                )
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            OutlinedTextField(
-                value = "",
-                onValueChange = { /*TODO*/ },
-                label = { Text("Пароль") },
-                shape = RoundedCornerShape(15.dp),
-                modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = TextColor,
-                    focusedLabelColor = TextColor
+                    focusedLabelColor = TextColor,
+                    cursorColor = TextColor
                 )
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
             OutlinedTextField(
-                value = "",
-                onValueChange = { /*TODO*/ },
+                value = state.signUpPassword,
+                onValueChange = {
+                    viewModel.onEvent(AuthUiEvent.SignUpPasswordChanged(it))
+                },
+                singleLine = true,
+                label = { Text("Пароль") },
+                shape = RoundedCornerShape(15.dp),
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = TextColor,
+                    focusedLabelColor = TextColor,
+                    cursorColor = TextColor
+                )
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            OutlinedTextField(
+                value = state.signUpPassword,
+                onValueChange = {
+                    viewModel.onEvent(AuthUiEvent.SignUpPasswordChanged(it))
+                },
+                singleLine = true,
                 label = { Text("Повторите пароль") },
                 shape = RoundedCornerShape(15.dp),
                 modifier = Modifier.fillMaxWidth(),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = TextColor,
-                    focusedLabelColor = TextColor
+                    focusedLabelColor = TextColor,
+                    cursorColor = TextColor
                 )
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = { /*TODO*/ },
@@ -198,7 +224,7 @@ fun RegistrationScreen() {
                 )
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = "Уже есть аккаунт?",
@@ -208,20 +234,26 @@ fun RegistrationScreen() {
                 fontSize = 24.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             )
-            Text(
-                text = "Войти в аккаунт",
-                style = MaterialTheme.typography.overline,
-                color = TextColor,
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 12.sp,
-                textAlign = TextAlign.Center,
-                textDecoration = TextDecoration.Underline,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(5.dp),
-            )
+            Surface(
+                onClick = {
+                    navController.navigate(Screen.LoginScreen.route)
+                }
+            ) {
+                Text(
+                    text = "Войти в аккаунт",
+                    style = MaterialTheme.typography.overline,
+                    color = TextColor,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Center,
+                    textDecoration = TextDecoration.Underline,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(4.dp),
+                )
+            }
         }
     }
 }
