@@ -13,11 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QairymMobile" >
         <activity
-            android:name=".presentation.login.Login"
-            android:exported="false"
-            android:label="@string/title_activity_login"
-            android:theme="@style/Theme.QairymMobile" />
-        <activity
             android:name=".presentation.MainActivity"
             android:exported="true"
             android:label="@string/app_name"

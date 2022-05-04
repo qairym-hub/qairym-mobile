@@ -12,20 +12,30 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.qairym.R
+import com.qairym.presentation.Screen
+import com.qairym.presentation.registration.AuthViewModel
 import com.qairym.presentation.ui.theme.ButtonBackground
 import com.qairym.presentation.ui.theme.GrayBackground
 import com.qairym.presentation.ui.theme.Shapes
 import com.qairym.presentation.ui.theme.TextColor
+import com.qairym.presentation.utils.AuthUiEvent
 
-@Preview
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    navController: NavController,
+    viewModel: AuthViewModel = hiltViewModel(),
+) {
+    val state = viewModel.state
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .wrapContentSize(Alignment.Center),
         color = MaterialTheme.colors.background
     ) {
         Column(
@@ -115,28 +125,36 @@ fun LoginScreen() {
             Spacer(modifier = Modifier.height(24.dp))
 
             OutlinedTextField(
-                value = "",
-                onValueChange = { /*TODO*/ },
-                label = { Text("Электронная почта") },
+                value = state.signInUsername,
+                onValueChange = {
+                    viewModel.onEvent(AuthUiEvent.SignInUsernameChanged(it))
+                },
+                singleLine = true,
+                label = { Text("Имя пользователя") },
                 shape = RoundedCornerShape(15.dp),
                 modifier = Modifier.fillMaxWidth(),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = TextColor,
-                    focusedLabelColor = TextColor
+                    focusedLabelColor = TextColor,
+                    cursorColor = TextColor
                 )
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             OutlinedTextField(
-                value = "",
-                onValueChange = { /*TODO*/ },
+                value = state.signInPassword,
+                onValueChange = {
+                    viewModel.onEvent(AuthUiEvent.SignInPasswordChanged(it))
+                },
+                singleLine = true,
                 label = { Text("Пароль") },
                 shape = RoundedCornerShape(15.dp),
                 modifier = Modifier.fillMaxWidth(),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = TextColor,
-                    focusedLabelColor = TextColor
+                    focusedLabelColor = TextColor,
+                    cursorColor = TextColor
                 )
             )
 
@@ -182,18 +200,24 @@ fun LoginScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
             )
-            Text(
-                text = "Создать аккаунт",
-                style = MaterialTheme.typography.overline,
-                color = TextColor,
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 12.sp,
-                textAlign = TextAlign.Center,
-                textDecoration = TextDecoration.Underline,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(5.dp),
-            )
+            Surface(
+                onClick = {
+                    navController.navigate(Screen.RegistrationScreen.route)
+                }
+            ) {
+                Text(
+                    text = "Создать аккаунт",
+                    style = MaterialTheme.typography.overline,
+                    color = TextColor,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Center,
+                    textDecoration = TextDecoration.Underline,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp),
+                )
+            }
         }
     }
 }
