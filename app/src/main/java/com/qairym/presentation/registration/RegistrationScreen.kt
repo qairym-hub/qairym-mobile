@@ -1,13 +1,17 @@
 package com.qairym.presentation.registration
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -15,22 +19,57 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.qairym.R
-import com.qairym.presentation.Screen
+import com.qairym.data.utils.AuthResult
+import com.qairym.presentation.AuthViewModel
+import com.qairym.presentation.destinations.HomeScreenDestination
+import com.qairym.presentation.destinations.LoginScreenDestination
+import com.qairym.presentation.destinations.RegistrationScreenDestination
 import com.qairym.presentation.ui.theme.ButtonBackground
 import com.qairym.presentation.ui.theme.GrayBackground
 import com.qairym.presentation.ui.theme.Shapes
 import com.qairym.presentation.ui.theme.TextColor
 import com.qairym.presentation.utils.AuthUiEvent
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @OptIn(ExperimentalMaterialApi::class)
+@Destination
 @Composable
 fun RegistrationScreen(
-    navController: NavController,
+    navigator: DestinationsNavigator,
     viewModel: AuthViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state
+    val context = LocalContext.current
+
+    LaunchedEffect(viewModel, context) {
+        viewModel.authResults.collect { result ->
+            when(result) {
+                is AuthResult.Authorized -> {
+                    navigator.navigate(HomeScreenDestination()) {
+                        popUpTo(RegistrationScreenDestination.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+                is AuthResult.Unauthorized -> {
+                    Toast.makeText(
+                        context,
+                        "You're not authorized",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                is AuthResult.UnknownError -> {
+                    Toast.makeText(
+                        context,
+                        "An unknown error occurred",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -124,23 +163,23 @@ fun RegistrationScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            OutlinedTextField(
-                value = state.signUpEmail,
-                onValueChange = {
-                    viewModel.onEvent(AuthUiEvent.SignUpEmailChanged(it))
-                },
-                singleLine = true,
-                label = { Text("Электронная почта") },
-                shape = RoundedCornerShape(15.dp),
-                modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = TextColor,
-                    focusedLabelColor = TextColor,
-                    cursorColor = TextColor
-                )
-            )
+//            OutlinedTextField(
+//                value = state.signUpEmail,
+//                onValueChange = {
+//                    viewModel.onEvent(AuthUiEvent.SignUpEmailChanged(it))
+//                },
+//                singleLine = true,
+//                label = { Text("Электронная почта") },
+//                shape = RoundedCornerShape(15.dp),
+//                modifier = Modifier.fillMaxWidth(),
+//                colors = TextFieldDefaults.outlinedTextFieldColors(
+//                    focusedBorderColor = TextColor,
+//                    focusedLabelColor = TextColor,
+//                    cursorColor = TextColor
+//                )
+//            )
 
-            Spacer(modifier = Modifier.height(10.dp))
+//            Spacer(modifier = Modifier.height(10.dp))
 
             OutlinedTextField(
                 value = state.signUpUsername,
@@ -197,7 +236,9 @@ fun RegistrationScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    viewModel.onEvent(AuthUiEvent.SignUp)
+                },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = ButtonBackground
                 ),
@@ -238,7 +279,11 @@ fun RegistrationScreen(
             )
             Surface(
                 onClick = {
-                    navController.navigate(Screen.LoginScreen.route)
+                    navigator.navigate(LoginScreenDestination()) {
+                        popUpTo(RegistrationScreenDestination.route) {
+                            inclusive = true
+                        }
+                    }
                 }
             ) {
                 Text(
@@ -254,6 +299,16 @@ fun RegistrationScreen(
                         .padding(4.dp),
                 )
             }
+        }
+    }
+    if (state.isLoading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
         }
     }
 }
