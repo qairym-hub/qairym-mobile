@@ -51,6 +51,27 @@ class AuthRepositoryImpl(
             prefs.edit()
                 .putString("jwt", response.access_token)
                 .apply()
+            prefs.edit()
+                .putString("username", username)
+                .apply()
+            AuthResult.Authorized()
+        } catch (e: HttpException) {
+            if (e.code() == 401) {
+                AuthResult.Unauthorized()
+            } else {
+                Log.e("Error", e.message())
+                AuthResult.UnknownError()
+            }
+        } catch (e: Exception) {
+            AuthResult.UnknownError()
+        }
+    }
+
+    override suspend fun getUser(): AuthResult<Unit> {
+        return try {
+            val token = prefs.getString("jwt", null) ?: return AuthResult.Unauthorized()
+            val username = prefs.getString("username", null) ?: return AuthResult.Unauthorized()
+            api.getUser("Bearer $token", username)
             AuthResult.Authorized()
         } catch (e: HttpException) {
             if (e.code() == 401) {

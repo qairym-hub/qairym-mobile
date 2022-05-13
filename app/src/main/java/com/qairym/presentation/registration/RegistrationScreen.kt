@@ -19,25 +19,21 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.qairym.R
 import com.qairym.data.utils.AuthResult
 import com.qairym.presentation.AuthViewModel
-import com.qairym.presentation.destinations.HomeScreenDestination
-import com.qairym.presentation.destinations.LoginScreenDestination
-import com.qairym.presentation.destinations.RegistrationScreenDestination
+import com.qairym.presentation.Screen
 import com.qairym.presentation.ui.theme.ButtonBackground
 import com.qairym.presentation.ui.theme.GrayBackground
 import com.qairym.presentation.ui.theme.Shapes
 import com.qairym.presentation.ui.theme.TextColor
 import com.qairym.presentation.utils.AuthUiEvent
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @OptIn(ExperimentalMaterialApi::class)
-@Destination
 @Composable
 fun RegistrationScreen(
-    navigator: DestinationsNavigator,
+    navController: NavHostController,
     viewModel: AuthViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state
@@ -47,8 +43,8 @@ fun RegistrationScreen(
         viewModel.authResults.collect { result ->
             when(result) {
                 is AuthResult.Authorized -> {
-                    navigator.navigate(HomeScreenDestination()) {
-                        popUpTo(RegistrationScreenDestination.route) {
+                    navController.navigate(route = Screen.MainScreen.route) {
+                        popUpTo(Screen.RegistrationScreen.route) {
                             inclusive = true
                         }
                     }
@@ -279,8 +275,8 @@ fun RegistrationScreen(
             )
             Surface(
                 onClick = {
-                    navigator.navigate(LoginScreenDestination()) {
-                        popUpTo(RegistrationScreenDestination.route) {
+                    navController.navigate(route = Screen.LoginScreen.route) {
+                        popUpTo(Screen.RegistrationScreen.route) {
                             inclusive = true
                         }
                     }

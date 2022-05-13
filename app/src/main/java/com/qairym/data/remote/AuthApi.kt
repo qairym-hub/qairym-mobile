@@ -3,8 +3,8 @@ package com.qairym.data.remote
 import com.qairym.data.dto.LoginRequest
 import com.qairym.data.dto.RegistrationRequest
 import com.qairym.data.dto.TokenResponse
-import retrofit2.http.Body
-import retrofit2.http.POST
+import com.qairym.data.dto.UserResponse
+import retrofit2.http.*
 
 interface AuthApi {
 
@@ -17,4 +17,10 @@ interface AuthApi {
     suspend fun signIn(
         @Body request: LoginRequest,
     ): TokenResponse
+
+    @GET("api/user/find/username/{username}")
+    suspend fun getUser(
+        @Header("Authorization") token: String,
+        @Path("username") username: String
+    )
 }
