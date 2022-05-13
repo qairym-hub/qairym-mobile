@@ -13,7 +13,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination
 @Composable
-fun HomeScreen(
+fun ProfileScreen(
     navController: NavController,
 ) {
     Scaffold(
@@ -25,7 +25,7 @@ fun HomeScreen(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "Home Screen!")
+            Text(text = "Profile Screen!")
         }
     }
 }

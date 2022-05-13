@@ -3,6 +3,7 @@ package com.qairym.di
 import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import com.qairym.common.Constants.BASE_URL
 import com.qairym.data.remote.AuthApi
 import com.qairym.data.repository.AuthRepository
 import com.qairym.data.repository.AuthRepositoryImpl
@@ -23,7 +24,7 @@ object AppModule {
     @Singleton
     fun provideAuthApi(): AuthApi {
         return Retrofit.Builder()
-            .baseUrl("https://qaihub.herokuapp.com/")
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create()

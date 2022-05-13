@@ -7,4 +7,5 @@ import com.qairym.data.utils.AuthResult
 interface AuthRepository {
     suspend fun signUp(username: String, password: String, location: Location): AuthResult<Unit>
     suspend fun signIn(username: String, password: String): AuthResult<Unit>
+    suspend fun getUser(): AuthResult<Unit>
 }

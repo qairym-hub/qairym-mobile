@@ -26,6 +26,10 @@ class AuthViewModel @Inject constructor(
     private val resultChannel = Channel<AuthResult<Unit>>()
     val authResults = resultChannel.receiveAsFlow()
 
+    init {
+        getUser()
+    }
+
     fun onEvent(event: AuthUiEvent) {
         when(event) {
             is AuthUiEvent.SignInUsernameChanged -> {
@@ -72,6 +76,15 @@ class AuthViewModel @Inject constructor(
                 username = state.signInUsername,
                 password = state.signInPassword
             )
+            resultChannel.send(result)
+            state = state.copy(isLoading = false)
+        }
+    }
+
+    private fun getUser() {
+        viewModelScope.launch {
+            state = state.copy(isLoading = true)
+            val result = repository.getUser()
             resultChannel.send(result)
             state = state.copy(isLoading = false)
         }
