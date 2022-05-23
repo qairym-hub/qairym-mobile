@@ -1,54 +1,102 @@
 package com.qairym.presentation.home
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.qairym.presentation.bottomnavbar.BottomNavItem
-import com.qairym.presentation.bottomnavbar.BottomNavigationBar
-import com.ramcosta.composedestinations.annotation.Destination
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.paging.ExperimentalPagingApi
 
-@Destination
+@ExperimentalPagingApi
 @Composable
 fun HomeScreen(
-    navController: NavController,
+    navController: NavHostController,
+    viewModel: HomeViewModel = hiltViewModel(),
 ) {
+    val state = viewModel.state
+
     Scaffold(
-        bottomBar = {
-            BottomNavigationBar(
-                items = listOf(
-                    BottomNavItem(
-                        name = "Home",
-                        route = "home",
-                        icon = Icons.Default.Home
-                    ),
-                    BottomNavItem(
-                        name = "Profile",
-                        route = "profile",
-                        icon = Icons.Default.Person
-                    ),
-                ),
-                navController = navController,
-                onItemClick = {
-                    navController.navigate(it.route)
-                },
-            )
-        },
+        topBar = { TopBar("Home") },
         content = {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 50.dp)
             ) {
-                Text(text = "You're authenticated!")
+                items(state.items.size) { i ->
+                    val item = state.items[i]
+                    if (i >= state.items.size - 1 && !state.endReached && !state.isLoading) {
+                        viewModel.loadNextItems()
+                    }
+                    Column(
+                        modifier = Modifier
+                            .border(1.dp, Color.Black)
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 12.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier.wrapContentSize(),
+                        ) {
+                            Text(
+                                text = item.title,
+                                fontSize = 20.sp,
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row {
+                            Text(text = item.text)
+                        }
+                    }
+                }
+                item {
+                    if (state.isLoading) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                }
             }
         }
     )
+}
+
+@Composable
+@Preview
+fun Post() {
+    Column(
+        modifier = Modifier
+            .border(1.dp, Color.Black)
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 20.dp)
+
+    ) {
+        Box(
+            modifier = Modifier.wrapContentSize(),
+        ) {
+            Text(
+                text = "Title of post",
+                fontSize = 20.sp,
+            )
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Row {
+            Text(text = "Post text")
+        }
+    }
 }

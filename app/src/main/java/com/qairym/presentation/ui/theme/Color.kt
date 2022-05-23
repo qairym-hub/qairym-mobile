@@ -12,3 +12,5 @@ val GrayBackground = Color(0xFFDCDCDC)
 val TextColor = Color(0xFF787878)
 
 val ButtonBackground = Color(0xFF339DFF)
+
+val LightThemeColor = Color(0xFF222222)
