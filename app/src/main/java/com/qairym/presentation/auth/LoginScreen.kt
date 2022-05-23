@@ -247,7 +247,8 @@ fun LoginScreen(
                             inclusive = true
                         }
                     }
-                }
+                },
+                shape = RoundedCornerShape(15.dp)
             ) {
                 Text(
                     text = "Создать аккаунт",

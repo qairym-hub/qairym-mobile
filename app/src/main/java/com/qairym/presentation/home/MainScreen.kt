@@ -17,12 +17,12 @@ import com.qairym.presentation.home.bottomnavbar.BottomNavGraph
 
 @ExperimentalPagingApi
 @Composable
-fun MainScreen(packageManager: PackageManager) {
+fun MainScreen() {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
     ) {
-        BottomNavGraph(navController = navController, packageManager)
+        BottomNavGraph(navController = navController)
     }
 }
 

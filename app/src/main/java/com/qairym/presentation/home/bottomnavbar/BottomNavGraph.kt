@@ -11,7 +11,7 @@ import com.qairym.presentation.home.ProfileScreen
 
 @ExperimentalPagingApi
 @Composable
-fun BottomNavGraph(navController: NavHostController, packageManager: PackageManager) {
+fun BottomNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
         startDestination = BottomBarScreen.Home.route
@@ -20,7 +20,7 @@ fun BottomNavGraph(navController: NavHostController, packageManager: PackageMana
             HomeScreen(navController = navController)
         }
         composable(route = BottomBarScreen.Profile.route) {
-            ProfileScreen(packageManager = packageManager)
+            ProfileScreen()
         }
     }
 }

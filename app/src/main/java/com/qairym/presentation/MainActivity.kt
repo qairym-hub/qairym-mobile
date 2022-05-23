@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             QairymMobileTheme {
                 val navController = rememberNavController()
-                SetupNavGraph(navController = navController, packageManager)
+                SetupNavGraph(navController = navController)
             }
         }
     }
@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
 @ExperimentalMaterialApi
 @ExperimentalPagingApi
 @Composable
-fun SetupNavGraph(navController: NavHostController, packageManager: PackageManager) {
+fun SetupNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
         startDestination = Screen.LoginScreen.route
@@ -47,7 +47,7 @@ fun SetupNavGraph(navController: NavHostController, packageManager: PackageManag
             RegistrationScreen(navController = navController)
         }
         composable(route = Screen.MainScreen.route) {
-            MainScreen(packageManager = packageManager)
+            MainScreen()
         }
     }
 }

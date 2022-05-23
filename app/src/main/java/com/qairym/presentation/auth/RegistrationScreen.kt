@@ -281,7 +281,8 @@ fun RegistrationScreen(
                             inclusive = true
                         }
                     }
-                }
+                },
+                shape = RoundedCornerShape(15.dp)
             ) {
                 Text(
                     text = "Войти в аккаунт",
