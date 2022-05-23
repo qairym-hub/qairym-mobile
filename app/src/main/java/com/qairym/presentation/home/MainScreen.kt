@@ -1,5 +1,6 @@
 package com.qairym.presentation.home
 
+import android.content.pm.PackageManager
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -10,16 +11,18 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.paging.ExperimentalPagingApi
 import com.qairym.presentation.home.bottomnavbar.BottomBarScreen
 import com.qairym.presentation.home.bottomnavbar.BottomNavGraph
 
+@ExperimentalPagingApi
 @Composable
-fun MainScreen() {
+fun MainScreen(packageManager: PackageManager) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
     ) {
-        BottomNavGraph(navController = navController)
+        BottomNavGraph(navController = navController, packageManager)
     }
 }
 
@@ -42,7 +45,6 @@ fun BottomBar(navController: NavHostController) {
         }
     }
 }
-
 
 @Composable
 fun RowScope.AddItem(

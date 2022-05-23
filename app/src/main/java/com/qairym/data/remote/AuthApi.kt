@@ -3,7 +3,6 @@ package com.qairym.data.remote
 import com.qairym.data.dto.LoginRequest
 import com.qairym.data.dto.RegistrationRequest
 import com.qairym.data.dto.TokenResponse
-import com.qairym.data.dto.UserResponse
 import retrofit2.http.*
 
 interface AuthApi {

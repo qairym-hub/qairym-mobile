@@ -1,19 +1,24 @@
 package com.qairym.presentation
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.paging.ExperimentalPagingApi
+import com.qairym.presentation.auth.LoginScreen
+import com.qairym.presentation.auth.RegistrationScreen
 import com.qairym.presentation.home.MainScreen
-import com.qairym.presentation.login.LoginScreen
-import com.qairym.presentation.registration.RegistrationScreen
 import com.qairym.presentation.ui.theme.QairymMobileTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+@ExperimentalMaterialApi
+@ExperimentalPagingApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,14 +26,16 @@ class MainActivity : ComponentActivity() {
         setContent {
             QairymMobileTheme {
                 val navController = rememberNavController()
-                SetupNavGraph(navController = navController)
+                SetupNavGraph(navController = navController, packageManager)
             }
         }
     }
 }
 
+@ExperimentalMaterialApi
+@ExperimentalPagingApi
 @Composable
-fun SetupNavGraph(navController: NavHostController) {
+fun SetupNavGraph(navController: NavHostController, packageManager: PackageManager) {
     NavHost(
         navController = navController,
         startDestination = Screen.LoginScreen.route
@@ -40,7 +47,7 @@ fun SetupNavGraph(navController: NavHostController) {
             RegistrationScreen(navController = navController)
         }
         composable(route = Screen.MainScreen.route) {
-            MainScreen()
+            MainScreen(packageManager = packageManager)
         }
     }
 }
